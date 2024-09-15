@@ -4,6 +4,7 @@ function CreateContent(frontmatter: Frontmatter, body_md: string): string {
   // frontmatter を作成
   const frontmatterStr = `---
 isActive: ${frontmatter.isActive}
+number: ${frontmatter.number}
 title: ${frontmatter.title}
 date: ${frontmatter.date}
 tags: ${frontmatter.tags}
