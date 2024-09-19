@@ -54,7 +54,7 @@ function CreateFrontmatter(body: request): [Frontmatter, string] {
       number: body.post.number,
       title: title,
       date: date,
-      tags: yaml.tags ?? tags,
+      tags: yaml.tags ? Array.from(new Set([...yaml.tags, ...tags])) : tags,
       options: {
         description: yaml.description,
         repository: yaml.repository,
