@@ -3,8 +3,8 @@ import type { request } from "../types/EsaWebhookRequest";
 import type { Frontmatter, YamlParse } from "../types/Frontmatter";
 
 function CreateFrontmatter(body: request): [Frontmatter, string] {
-  const dirName = body.post.name.split(" ")[0];
-  const tagStrs = body.post.name.split(" ").slice(1);
+  const dirName = body.post.name.split(" #")[0];
+  const tagStrs = body.post.name.split(" #").slice(1);
   const tags: string[] = tagStrs.map((tag) => {
     return tag.replace("#", "");
   });
