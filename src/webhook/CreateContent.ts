@@ -6,7 +6,7 @@ function CreateContent(frontmatter: Frontmatter, body_md: string): string {
   const ymlStr = stringify(frontmatter)
 
   // frontmatter と body_md を結合
-  return `---\n${ymlStr}\n---\n${body_md}`;
+  return `---\n${ymlStr}---\n${body_md}`;
 }
 
 export default CreateContent;

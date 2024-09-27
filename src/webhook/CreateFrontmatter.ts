@@ -30,14 +30,7 @@ function CreateFrontmatter(body: request): [Frontmatter, string] {
   const codeblock = body.post.body_md.match(/```(yml|yaml)([\s\S]*?)```/)?.[0];
 
   if (!codeblock) {
-    const frontmatter = beforeFormatParse(
-      body.post.body_md,
-      !body.post.wip,
-      body.post.number,
-      title,
-      date,
-      tags,
-    );
+    const frontmatter = beforeFormatParse(body.post.body_md, !body.post.wip, body.post.number, title, date, tags);
     return [frontmatter, body.post.body_md];
   }
 
@@ -48,13 +41,18 @@ function CreateFrontmatter(body: request): [Frontmatter, string] {
   // codeblock を削除
   const body_md_without_codeblock = body.post.body_md.replace(codeblock, "");
 
+  const extendTags = yaml.tags ? Array.from(new Set([...yaml.tags, ...tags])) : tags;
+  extendTags.sort((a, b) => {
+    // 文字列の長さが短い順にソート
+    return a.length - b.length;
+  });
   return [
     {
       isActive: yaml.isActive ?? !body.post.wip,
       number: body.post.number,
       title: title,
       date: date,
-      tags: yaml.tags ? Array.from(new Set([...yaml.tags, ...tags])) : tags,
+      tags: extendTags,
       options: {
         description: yaml.description,
         repository: yaml.repository,
@@ -65,6 +63,7 @@ function CreateFrontmatter(body: request): [Frontmatter, string] {
       works: {
         worksDisplay: yaml.worksDisplay,
         worksTitle: yaml.worksTitle,
+        worksLink: yaml.worksLink,
         worksDescription: yaml.worksDescription,
         worksImage: yaml.worksImage,
       },
@@ -79,18 +78,14 @@ function beforeFormatParse(
   number: number,
   title: string,
   date: string,
-  tags: string[],
+  tags: string[]
 ): Frontmatter {
   const description = body_md.split("<!--more-->")[0];
 
   // 追加情報の取得
   const repoUrl = description.match(/<meta name="repo" content="(.+?)" \/>/)?.[0].split('"')[1];
-  const youtubeUrl = description
-    .match(/<meta name="youtube" content="(.+?)" \/>/)?.[0]
-    .split('"')[1];
-  const websiteUrl = description
-    .match(/<meta name="website" content="(.+?)" \/>/)?.[0]
-    .split('"')[1];
+  const youtubeUrl = description.match(/<meta name="youtube" content="(.+?)" \/>/)?.[0].split('"')[1];
+  const websiteUrl = description.match(/<meta name="website" content="(.+?)" \/>/)?.[0].split('"')[1];
 
   // src="~" の ~ を取得
   const imageUrl = description.match(/src="(.+?)"/)?.[0].split('"')[1];

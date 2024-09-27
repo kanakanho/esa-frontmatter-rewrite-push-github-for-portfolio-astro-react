@@ -19,6 +19,7 @@ export type options = {
 export type works = {
   worksDisplay: boolean;
   worksTitle: string;
+  worksLink: string;
   worksDescription: string;
   worksImage: string;
 };
