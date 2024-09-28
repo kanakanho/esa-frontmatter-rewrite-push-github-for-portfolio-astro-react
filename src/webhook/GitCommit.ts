@@ -10,7 +10,7 @@ async function GitCommit(
   content: string,
   message: string,
 ): Promise<boolean> {
-  const path = `posts/${frontmatter.number}.md`;
+  const path = `src/content/post/${frontmatter.number}.md`;
 
   const octokit = new Octokit({
     auth,

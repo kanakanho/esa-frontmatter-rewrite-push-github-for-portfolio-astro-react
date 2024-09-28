@@ -5,6 +5,7 @@ import type { request } from "../types/EsaWebhookRequest";
 import CreateContent from "./CreateContent";
 import CreateFrontmatter from "./CreateFrontmatter";
 import GitCommit from "./GitCommit";
+import FixCodeblock from "./FixCodeblock";
 
 async function Webhook(c: Context<Env, "/", BlankInput>) {
   const { GITHUB_ACCESS_TOKEN, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH } = env<{
@@ -21,7 +22,9 @@ async function Webhook(c: Context<Env, "/", BlankInput>) {
     frontmatter.isActive = false;
   }
 
-  const content = CreateContent(frontmatter, body_md);
+  const body_md_fixed = FixCodeblock(body_md);
+
+  const content = CreateContent(frontmatter, body_md_fixed);
 
   const ok = await GitCommit(
     GITHUB_ACCESS_TOKEN,
